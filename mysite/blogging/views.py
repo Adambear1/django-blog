@@ -1,32 +1,40 @@
+from django import template
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import RequestContext, loader
 from blogging.models import Post
 
 
-def stub_view(request, *args, **kwargs):
-    body = "Stub View\n\n"
-    if args:
-        body += "Args:\n"
-        body += "\n".join(["\t%s" % a for a in args])
-    if kwargs:
-        body += "Kwargs:\n"
-        body += "\n".join(["\t%s: %s" % i for i in kwargs.items()])
-    return HttpResponse(body, content_type="text/plain")
+class ListView():
+    def as_view(self):
+        return self.get
+
+    def get(self, request):
+        model_list_name = self.model.__name__.lower
+        context = {model_list_name: Post.objects.all()}
+        return render(request, self.template_name, context)
 
 
-def list_view(request):
-    published = Post.objects.exclude(published_date__exact=None)
-    posts = published.order_by('-published_date')
-    context = {'posts': posts}
-    return render(request, 'list.html', context)
+class DetailView():
+    def as_view(self):
+        return self.get
+
+    def get(self, request, *args, **kwargs):
+        if "pk" in args:
+            model_list_name = self.model.__name__.lower
+            context = {model_list_name: Post.objects.get(pk=args["pk"])}
+            return render(request, self.template_name, context)
+        model_list_name = self.model.__name__.lower
+        context = {model_list_name: Post.objects.all().order_by(
+            "-created_date").filter("published_date" != None)}
+        return render(request, self.template_name, context)
 
 
-def detail_view(request, post_id):
-    published = Post.objects.exclude(published_date__exact=None)
-    try:
-        post = published.get(pk=post_id)
-    except Post.DoesNotExist:
-        raise Http404
-    context = {'post': post}
-    return render(request, "blogging/detail.html", context)
+class BloggingListView(ListView):
+    model = Post
+    template_name = "blogging/list.html"
+
+
+class BlogginDetailView(DetailView):
+    model = Post
+    template_name = "blogging/detail.html"
