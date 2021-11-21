@@ -1,6 +1,10 @@
 {% load staticfiles %}
-<!DOCTYPE html>  ...
- <body>   
+<!DOCTYPE html>
+<head>
+  <title>Django Blog</title>   
+</head>
+ <body>
+
   <div id="header">  {# header begins here #}
    <ul id="control-bar">
    {% if user.is_authenticated %}
