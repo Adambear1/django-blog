@@ -1,0 +1,9 @@
+  {% for post in posts %}
+  <div>
+    <h2>
+      <a href="{% url 'blog_detail' post.pk %}">{{ post }}</a>
+    </h2>
+    <p class="byline">
+      Posted by {{ post.author.username }} -- {{ post.published_date }}
+    </p>
+</div>
