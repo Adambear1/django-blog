@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ poll.title }}</h1>
+<div>
+    {{ poll.text }}
+</div>
+<div>
+    Current score: {{ poll.score }}
+</div>
+<div>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="submit" name="vote" value="Yes">
+        <input type="submit" name="vote" value="No">
+    </form>
+</div>
+{% endblock %}

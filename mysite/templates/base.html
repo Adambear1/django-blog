@@ -1,0 +1,31 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Django Blog</title>
+</head>
+
+<body>
+    <div>
+        <ul>
+            {% if user.is_authenticated %}
+            {% if user.is_staff %}<li><a href="{% url 'admin:index' %}">admin</a></li>{% endif %}
+            <li><a href="{% url 'logout' %}">logout</a></li>
+            {% else %}
+            <li><a href="{% url 'login' %}">login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    <div>
+        <div>
+            {% block content %}
+            [content will go here]
+            {% endblock %}
+        </div>
+    </div>
+</body>
+
+</html>
