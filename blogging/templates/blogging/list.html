@@ -1,9 +1,21 @@
+{% extends "base.html" %}{% block content %}
+  <h1>Recent Posts</h1>
   {% for post in posts %}
   <div>
     <h2>
       <a href="{% url 'blog_detail' post.pk %}">{{ post }}</a>
     </h2>
-    <p class="byline">
-      Posted by {{ post.author.username }} -- {{ post.published_date }}
+    <p>
+      Posted by {{ post.author.username }} &mdash; {{ post.published_date }}
     </p>
-</div>
+    <div>
+      {{ post.text }}
+    </div>
+    <ul>
+      {% for category in post.categories.all %}
+        <li>{{ category }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endfor %}
+{% endblock %}
